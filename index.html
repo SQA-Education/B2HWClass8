@@ -14,7 +14,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#5B5091;min-height:100vh
 .card{background:#fff;border-radius:14px;padding:22px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.18)}
 .page{display:none}.page.on{display:block}
 h2{color:#5B5091;font-size:1.05rem;margin-bottom:14px;font-weight:700}
-.note{background:#ede9fe;border-left:4px solid #7c3aed;border-radius:6px;padding:10px 14px;font-size:.83rem;color:#4c1d95;margin-bottom:14px}
+.note{background:#fff7e8;border:1px solid #f3d796;color:#7a5b00;border-radius:12px;padding:12px;margin-top:12px;font-size:.83rem}
 label{display:block;font-weight:600;font-size:.87rem;color:#374151;margin-bottom:5px;margin-top:12px}
 input[type=text],select{width:100%;padding:12px;border:2px solid #d1d5db;border-radius:9px;font-size:.95rem;font-family:inherit}
 input:focus,select:focus{outline:none;border-color:#5B5091}
@@ -53,17 +53,6 @@ input:focus,select:focus{outline:none;border-color:#5B5091}
 textarea{width:100%;min-height:120px;padding:11px;border:2px solid #d1d5db;border-radius:9px;font-size:.9rem;font-family:inherit;resize:vertical;line-height:1.6}
 textarea:focus{outline:none;border-color:#5B5091}
 .wc{font-size:.78rem;color:#9ca3af;text-align:right;margin-top:3px}
-/* speaking */
-.recwrap{text-align:center;padding:10px 0}
-
-
-
-60%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}60%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
-
-
-
-
-
 /* feedback */
 .fb{border-radius:7px;padding:11px 14px;font-size:.86rem;line-height:1.6;margin-top:10px;display:none}
 .fb.show{display:block}
@@ -98,7 +87,6 @@ textarea:focus{outline:none;border-color:#5B5091}
 <div class="page on" id="p0">
 <div class="card">
   <h2>Welcome!</h2>
-  <div class="note">This homework covers Class 8: health and lifestyle vocabulary and the present perfect tense.</div>
   <label>Your full name</label>
   <input type="text" id="iName" placeholder="Enter your name...">
   <label style="margin-top:12px">Select Your Teacher &amp; Class</label>
@@ -113,6 +101,7 @@ textarea:focus{outline:none;border-color:#5B5091}
 </select>
   <input type="hidden" id="iTeacher">
   <button class="btn" onclick="goStart()">Start Homework &rarr;</button>
+  <div class="note">This homework covers Class 8: health and lifestyle vocabulary and the present perfect tense.</div>
 </div>
 </div>
 
@@ -169,7 +158,7 @@ textarea:focus{outline:none;border-color:#5B5091}
   <audio id="audio" controls class="hidden"></audio>
   <div id="transcriptBox" class="transcript-box" style="display:none;min-height:48px;margin-top:10px"></div>
   <div id="sFeedback" class="feedback" style="display:none"></div>
-  <button class="btn" id="sBtn" onclick="checkSpeaking()">Continue &rarr;</button><button class="btn" style="background:#e5e7eb;color:#333;margin-top:8px" onclick="show('p3')">&larr; Back</button>
+  <button class="btn" id="sBtn" onclick="checkSpeaking()" disabled>Continue &rarr;</button><button class="btn" style="background:#e5e7eb;color:#333;margin-top:8px" onclick="show('p3')">&larr; Back</button>
 </div>
 </div>
 
@@ -274,7 +263,6 @@ var sc = {r:0, v:0, w:0, s:0, g:0};
 var rPicked=[], gPicked=[];
 var activeR=[], activeG=[];
 var vSelected=null;
-var spoken='', isRec=false, recSecs=0, recTick=null, recog=null;
 var submitted=false;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -291,10 +279,10 @@ function rnd(arr){
 }
 
 // ─── START ───────────────────────────────────────────────────────────────────
-function pickTeacher(){
-  var sel=document.getElementById('iClass');
+function setTeacher(sel){
   var opt=sel.options[sel.selectedIndex];
-  document.getElementById('iTeacher').value = opt ? (opt.getAttribute('data-teacher')||'') : '';
+  var th=document.getElementById('iTeacher');
+  if(th) th.value = opt ? (opt.getAttribute('data-teacher')||'') : '';
 }
 
 function goStart(){
