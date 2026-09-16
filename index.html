@@ -596,7 +596,7 @@ function submitWork(){
     var o=null;
     try{ if(typeof sc!=='undefined'&&sc&&typeof sc==='object')o=sc; }catch(e){}
     try{ if(!o&&typeof scores!=='undefined'&&scores&&typeof scores==='object')o=scores; }catch(e){}
-    if(o){ for(var k in o){ if(typeof o[k]==="number") return o; } }
+    if(o){var out={},any=false,mp={r:'reading',l:'reading',reading:'reading',v:'vocabulary',vocab:'vocabulary',vocabulary:'vocabulary',w:'writing',writing:'writing',s:'speaking',speaking:'speaking',g:'grammar',grammar:'grammar',lu:'grammar'};for(var k in o){if(typeof o[k]==='number'){any=true;out[mp[k]||k]=o[k];}}if(any)return out;}
     var mx=(typeof maxGrammar!=="undefined"&&maxGrammar)?maxGrammar:0;
     var pct=null;try{if(typeof score!=="undefined"&&mx)pct=Math.round(score/mx*100);}catch(e){}
     return {percent:pct,correct:(typeof score!=="undefined"?score:null),grammar:(typeof scoreGrammar!=="undefined"?scoreGrammar:null),grammar_max:(typeof maxGrammar!=="undefined"?maxGrammar:null)};
@@ -620,8 +620,10 @@ function submitWork(){
     return attempt(0);
   }
   function markSaved(){ try{ var el=document.getElementById("submitStatus"); if(el){el.style.display="block";el.textContent="\u2713 Submitted \u2014 saved to your teacher's portal.";el.style.color="#15803d";} }catch(e){} }
-  var _o=window.submitToTeacher;
-  if(typeof _o==='function'){window.submitToTeacher=function(){var ret=_o.apply(this,arguments);try{portalSave().then(function(s){if(s==='ok')markSaved();});}catch(e){}return ret;};}
+  ['submitWork','submitToTeacher','submitFinal','submitAll','directSubmit','submitHomework'].forEach(function(fn){
+    var _o=window[fn];
+    if(typeof _o==='function'){window[fn]=function(){var ret=_o.apply(this,arguments);try{portalSave().then(function(s){if(s==='ok')markSaved();});}catch(e){}return ret;};}
+  });
 })();
 </script>
 <script>
