@@ -447,12 +447,10 @@ function startRec(){
   recognition.onstart=function(){
     document.getElementById('recStatus').textContent='Microphone active — speak now';
   };
-  recognition.onresult=function(e){
+  recognitionvar __committed=(typeof spokenText!=='undefined'?spokenText:'')||'';
+.onresult=function(e){
     var interim='';
-    for(var i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal) spokenText+=e.results[i][0].transcript+' ';
-      else interim+=e.results[i][0].transcript;
-    }
+    var __f='';for(var i=0;i<e.results.length;i++){if(e.results[i].isFinal)__f+=e.results[i][0].transcript+' ';else interim+=e.results[i][0].transcript+' ';}spokenText=(__committed+' '+__f).replace(/\s+/g,' ').trim();
     tb.textContent=(spokenText+interim).trim()||'Listening...';
     tb.style.display='block';
   };
@@ -465,7 +463,7 @@ function startRec(){
       document.getElementById('recBtn').classList.remove('recording');
     }
   };
-  recognition.onend=function(){
+  recognition.onend=function(){__committed=spokenText;
     if(isRec){ try{recognition.start();}catch(ex){
       document.getElementById('recStatus').textContent='Restarting... '+ex.message;
     }}
